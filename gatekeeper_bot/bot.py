@@ -4,6 +4,9 @@ import discord, os
 from discord import app_commands
 from discord.ext import commands
 
+EXT = ["cogs.minecraft",
+        "cogs.moderation"]
+
 class GatekeeperBot(commands.Bot):
     def __init__(self)->None:
         intents = discord.Intents.default()
@@ -17,11 +20,11 @@ class GatekeeperBot(commands.Bot):
                          application_id=1115019763647778867)
         
     async def setup_hook(self):
-        await self.load_extension("cogs.minecraft")
+        for i in range(0, len(EXT)):
+            await self.load_extension(EXT[i])
         
     def changeSyncState(self, state: bool = False):
         self.synced = state
-        
         
 bot = GatekeeperBot()
 
