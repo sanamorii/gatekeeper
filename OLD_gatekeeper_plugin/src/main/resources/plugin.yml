@@ -1,7 +1,0 @@
-name: gatekeeper_plugin
-version: '${project.version}'
-main: dev.atelierlune.jiansu.gatekeeper_plugin.Gatekeeper
-api-version: '1.19'
-author: [Jiansu (sanamorii)]
-description: Minecraft whitelisting bot for discord.
-website: https://sanamorii.github.io

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/Irisu.iml" filepath="$PROJECT_DIR$/Irisu.iml" />
+      <module fileurl="file://$PROJECT_DIR$/IrisuHook.iml" filepath="$PROJECT_DIR$/IrisuHook.iml" />
     </modules>
   </component>
 </project>

@@ -4,6 +4,7 @@ import json
 from exceptions import InvalidMinecraftUsername
 
 class MojangAPI:
+    
     @staticmethod
     def usernameToUUID(username) -> dict:
         response = requests.get(f"https://api.mojang.com/users/profiles/minecraft/{username}")

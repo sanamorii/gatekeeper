@@ -5,18 +5,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>dev.atelierlune.jiansu</groupId>
-    <artifactId>Irisu</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <artifactId>IrisuHook</artifactId>
+    <version>1.0</version>
     <packaging>jar</packaging>
 
-    <name>gatekeeper_plugin</name>
+    <name>IrisuHook</name>
 
-    <description>Minecraft whitelisting bot for discord.</description>
     <properties>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
-    <url>sanamorii.github.io</url>
 
     <build>
         <plugins>
