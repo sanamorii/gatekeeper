@@ -41,10 +41,14 @@ class RCONClient(object, metaclass=Singleton):
         elif response.lower() == "that player does not exist":
             raise exceptions.PlayerDoesNotExist(username=username)
         
-    async def getPlayers(self):
+    async def getOnlinePlayers(self):
         response = await self.client.send_cmd(cmd="list")
-        return response
+        print(self.getPlayers(self.clean(response[0])))
     
     @staticmethod
     def clean(text: str):
-        return re.sub(r"(\xA7[0-9a-fk-orA-FK-OR])", "", text)
+        return re.sub(r"(\xA7[0-9a-fk-orA-FK-OR])", "", text).rstrip("\n")
+    
+    @staticmethod
+    def getPlayers(text: str):
+        return re.search(r"(\d+)", text).group(1)

@@ -16,54 +16,45 @@ class SQLiteDatabase(object, metaclass=Singleton):
 
     def __init__(self, path: str = ":memory:") -> None:
         self.path : str = path
-        self.conn : sqlite3.Connection = None
-        self.cursor : sqlite3.Cursor = None  ## created via context manager
+        self.conn : sqlite3.Connection = sqlite3.connect(path)
+        self.cursor : sqlite3.Cursor = self.conn.cursor()  ## created via context manager
         
         self._initialisation()
+    
+    def __del__(self):
+        self.cursor.close()
+        self.conn.close()
+        
         
     def _initialisation(self):
         print("Database connected.")
-
     
-    def __enter__(self, *args, **kwargs):
-
-        return self
-    
-    def __exit__(self, *args, **kwargs):
-        self.conn.commit()
-        
-
-    ## stupid decorator thingy
-    def database_query(func):
-        def wrapper(self):
-            self.conn = sqlite3.connect(self.path)
-            self.cursor = self.conn.cursor()
-            func()
-            self.cursor.close()
-            self.conn.close()
-        return wrapper
-    
-    
-    def _checkTables(self):
-        pass
-    
-    @database_query
-    def addMember(self, member: discord.User, content: dict):
+    def addMember(self, member: discord.User, mc_data: dict):
         
         ## Build insert SQL statement
         stmt = StatementBuilder.insert(table="members",
                                 member_id=member.id,
                                 member_nickname=member.display_name,
                                 member_dcname=member.name,
-                                member_mcname=content["name"],
-                                member_mcuuid=content["id"]
+                                member_mcname=mc_data["name"],
+                                member_mcuuid=mc_data["id"]
                             )
         self.cursor.execute(stmt)
     
-    @database_query
-    def checkMemberIsAdmin(self, id: int):
-        stmt = f"SELECT id FROM members WHERE member_id={id} AND member_admin=1"
-        self.cursor.execute(stmt)
+    def isMember(self, member: discord.User) -> bool:
+        stmt = """SELECT count(*) FROM members WHERE member_id=?"""
+        self.cursor.execute(stmt, (member.id,))
+        if self.cursor.fetchone()[0] < 1:
+            return False 
+        else:
+            return True
+    
+    ## sqlite does not support arrays
+    @staticmethod
+    def encode(arr: list): return ",".join(arr)
+    
+    @staticmethod
+    def decode(string: str): return string.split(",")
         
 
 class MongoDB(object, metaclass=Singleton):

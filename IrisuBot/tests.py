@@ -1,8 +1,15 @@
-from integration.rcon import RCONClient
-import asyncio
+# from integration.rcon import RCONClient
+# import asyncio
 
-async def main():
-    async with RCONClient() as client:
-        await client.whitelistAdd("asfageqwfasfasfawr")
+# async def main():
+#     async with RCONClient() as client:
+#         await client.whitelistAdd("asfahwrge")
             
-asyncio.run(main())
+# asyncio.run(main())
+
+
+from database import SQLiteDatabase
+
+db = SQLiteDatabase("./database.db")
+
+print(db.isMember(1324135))

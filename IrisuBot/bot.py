@@ -7,10 +7,11 @@ from discord.ext import commands
 from database import SQLiteDatabase
 
 EXT = ["cogs.minecraft",
-        "cogs.moderation"]
+        "cogs.moderation",
+        "cogs.basic"]
 
 class GatekeeperBot(commands.Bot):
-    def __init__(self)->None:
+    def __init__(self, app_id:int)->None:
         intents = discord.Intents.default()
         intents.message_content = True
         
@@ -20,7 +21,8 @@ class GatekeeperBot(commands.Bot):
         super().__init__(command_prefix="!", 
                          description=":^)", 
                          intents=intents,
-                         application_id=1115019763647778867)
+                         application_id=app_id,
+                         owner_id=975512354265636874)
         
     async def setup_hook(self):
         
@@ -34,11 +36,15 @@ class GatekeeperBot(commands.Bot):
     def changeSyncState(self, state: bool = False):
         self.synced = state
         
-bot = GatekeeperBot()
+with open("./config.json", "r") as f:
+    config = json.load(f)
+    TOKEN = config["token"]
+    APP_ID = config["application_id"]
+
+bot = GatekeeperBot(app_id=APP_ID)
 
 @bot.event
 async def on_ready():
-    await bot.tree.sync()
     bot.changeSyncState(state=True)
     
     await bot.change_presence(status=discord.Status.online, 
@@ -48,8 +54,5 @@ async def on_ready():
     
 
 if __name__ == "__main__":
-    with open("./config.json", "r") as f:
-        TOKEN = json.load(f)["token"]
-
     bot.run(token=TOKEN)
     
