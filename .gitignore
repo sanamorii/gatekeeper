@@ -1,4 +1,5 @@
 *config.json
+*.db
 *.pyc
 *.pyo
 *.code-workspace

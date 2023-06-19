@@ -15,7 +15,7 @@ class GatekeeperBot(commands.Bot):
         intents.message_content = True
         
         self.synced = False
-        self.db = None;
+        self.db = SQLiteDatabase("./database.db");
         
         super().__init__(command_prefix="!", 
                          description=":^)", 

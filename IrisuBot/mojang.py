@@ -1,7 +1,6 @@
 import requests
 import json
-
-from exceptions import InvalidMinecraftUsername
+import exceptions
 
 class MojangAPI:
     
@@ -14,7 +13,7 @@ class MojangAPI:
             raise e
             
         content = json.loads(response.content)
-        if content.get("errorMessage") is not None:
-            raise InvalidMinecraftUsername(f"{username} is not valid.")
+        if content.get("errorMessage"):
+            raise exceptions.PlayerDoesNotExist(username)
         else:
             return content
