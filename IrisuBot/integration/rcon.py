@@ -7,6 +7,7 @@ import exceptions
 from patterns import Singleton
 
 class RCONClient(object, metaclass=Singleton):
+    ## TODO: find an alternative way to implementate w/out context manager
     
     def __init__(self) -> None:
         with open("./config.json", "r") as f:
@@ -18,17 +19,24 @@ class RCONClient(object, metaclass=Singleton):
         self.connected : bool = False
         
     async def __aenter__(self, *args, **kwargs):
-        try:
-            await self.client.connect()
-        except aiomcrcon.RCONConnectionError:
-            raise aiomcrcon.RCONConnectionError
-        else:
-            self.connected = False
-        
+        await self.connect()
         return self
     
     async def __aexit__(self, *args, **kwargs):
-         if self.connected: self.client.close()
+         await self.close()
+         
+
+    async def connect(self):
+        try:
+            await self.client.connect()
+        except aiomcrcon.RCONConnectionError:
+            raise aiomcrcon.RCONConnectionError("failed to connect")
+        else:
+            self.connected = False
+    
+    async def close(self):
+        if self.connected: self.client.close()
+        
     
     async def whitelistAdd(self, username: str) -> None:
         '''add to whitelist'''
@@ -37,13 +45,14 @@ class RCONClient(object, metaclass=Singleton):
         response = self.clean(response[0])
         
         if response.lower() == "player is already whitelisted":
-            raise exceptions.PlayerAlreadyExists(username=username)
+            raise exceptions.AlreadyWhitelisted(username=username)
         elif response.lower() == "that player does not exist":
             raise exceptions.PlayerDoesNotExist(username=username)
         
     async def getOnlinePlayers(self):
         response = await self.client.send_cmd(cmd="list")
         print(self.getPlayers(self.clean(response[0])))
+    
     
     @staticmethod
     def clean(text: str):
