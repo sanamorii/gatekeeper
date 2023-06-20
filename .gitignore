@@ -5,3 +5,5 @@
 *.code-workspace
 *target/
 *.bkp
+*tests.py
+*tests/

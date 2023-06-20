@@ -3,8 +3,6 @@ from discord.ext import commands
 from discord import app_commands
 from exceptions import InvalidMinecraftUsername
 
-from mojang import MojangAPI
-
 class Moderation(commands.Cog, group_name="MinecraftIntegration"):
     def __init__(self, bot: commands.Bot) -> None:
         self.bot = bot
