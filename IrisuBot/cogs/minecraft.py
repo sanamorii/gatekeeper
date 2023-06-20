@@ -48,6 +48,9 @@ class MinecraftIntegration(commands.Cog):
 
         elif self.bot.db.updateLinkedAccount(user=interaction.user, mc_data=content):
             msg += "\nYour discord account has been linked to your Minecraft Account."
+        
+        else:
+            msg += "\nYour discord account is already linked."
             
         await interaction.response.send_message(msg, ephemeral=True)
         

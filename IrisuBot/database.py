@@ -67,10 +67,10 @@ class SQLiteDatabase(object, metaclass=Singleton):
         data = self.cursor.fetchone()
         
         if data[0] != mc_data["name"]:  ## only changing the name 
-            self.cursor.execute(upd_stmt.format("user_mcname"), (mc_data["name"],))
+            self.cursor.execute(upd_stmt.format("user_mcname"), (mc_data["name"], user.id, ))
 
         if data[1] != mc_data["id"]:
-            self.cursor.execute(upd_stmt.format("user_mcuuid"), (mc_data["id"],))
+            self.cursor.execute(upd_stmt.format("user_mcuuid"), (mc_data["id"], user.id, ))
             return True
         return False            
         
