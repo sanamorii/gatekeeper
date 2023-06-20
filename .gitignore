@@ -4,3 +4,4 @@
 *.pyo
 *.code-workspace
 *target/
+*.bkp
