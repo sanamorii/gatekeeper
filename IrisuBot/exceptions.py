@@ -13,7 +13,7 @@ class InvalidDatabase(Exception):
     def __init__(self, *args: object) -> None:
         super().__init__(*args)
         
-class PlayerAlreadyExists(Exception):
+class AlreadyWhitelisted(Exception):
     def __init__(self, username: str) -> None:
         self.message = f"{username} has already been added to the whitelist"
         super().__init__(self.message)
