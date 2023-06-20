@@ -45,9 +45,6 @@ class IrisuBot(commands.Bot):
         for i in range(0, len(EXT)):
             print(f"Loaded {EXT[i]}")
             await self.load_extension(EXT[i])
-        
-    def changeSyncState(self, state: bool = False):
-        self.synced = state
 
 Config.load("./config.json")
 bot = IrisuBot(application_id=Config.application_id,
@@ -55,12 +52,9 @@ bot = IrisuBot(application_id=Config.application_id,
                db_path=Config.db_path)
 
 @bot.event
-async def on_ready():
-    bot.changeSyncState(state=True)
-    
+async def on_ready():    
     await bot.change_presence(status=discord.Status.online, 
                               activity=discord.Game("MCServer offline..."))
-    
     print(f"{bot.user} is ready.")
     
 
