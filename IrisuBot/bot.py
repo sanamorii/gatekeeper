@@ -1,47 +1,58 @@
 import json
-from typing import Any, Coroutine
+import logging
+from typing import Any, Coroutine, Optional
 import discord, os
 from discord import app_commands
 from discord.ext import commands
+from discord.utils import MISSING
 
 from database import SQLiteDatabase
 
 EXT = ["cogs.minecraft",
         "cogs.moderation",
-        "cogs.basic"]
+        "cogs.core"]
 
-class GatekeeperBot(commands.Bot):
-    def __init__(self, app_id:int)->None:
-        intents = discord.Intents.default()
-        intents.message_content = True
-        
-        self.synced = False
-        self.db = SQLiteDatabase("./database.db");
+
+class Config(object):
+    application_id : int
+    owner_id : int
+    token : str
+    db_path : str
+    
+    @classmethod
+    def load(cls, path: str):
+        with open(path, "r") as f:
+            config = json.load(f)
+        cls.token = config["token"]
+        cls.application_id = config["application_id"]
+        cls.owner_id = config["owner_id"]
+        cls.db_path = config["db_path"]
+    
+
+class IrisuBot(commands.Bot):
+    def __init__(self, application_id: int, owner_id: int, db_path: str)->None:
+        intents = discord.Intents.all()
+        self.db : SQLiteDatabase = SQLiteDatabase(path=db_path)
         
         super().__init__(command_prefix="!", 
                          description=":^)", 
                          intents=intents,
-                         application_id=app_id,
-                         owner_id=975512354265636874)
+                         application_id=application_id,
+                         owner_id=owner_id)
         
     async def setup_hook(self):
-        
-        self.db = SQLiteDatabase("./database.db")
-        
         # Load cogs
         for i in range(0, len(EXT)):
-            print(f"Loaded cogs.{EXT[i]}")
+            print(f"Loaded {EXT[i]}")
             await self.load_extension(EXT[i])
         
     def changeSyncState(self, state: bool = False):
         self.synced = state
-        
-with open("./config.json", "r") as f:
-    config = json.load(f)
-    TOKEN = config["token"]
-    APP_ID = config["application_id"]
 
-bot = GatekeeperBot(app_id=APP_ID)
+Config.load("./config.json")
+bot = IrisuBot(application_id=Config.application_id,
+               owner_id=Config.owner_id,
+               db_path=Config.db_path)
 
 @bot.event
 async def on_ready():
@@ -54,5 +65,5 @@ async def on_ready():
     
 
 if __name__ == "__main__":
-    bot.run(token=TOKEN)
+    bot.run(token=Config.token)
     
