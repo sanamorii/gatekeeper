@@ -1,4 +1,0 @@
-name: IrisuHook
-version: '${project.version}'
-main: dev.atelierlune.jiansu.irisuhook.IrisuHook
-api-version: 1.19
